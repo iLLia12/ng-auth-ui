@@ -1,6 +1,20 @@
 version: "3.8"
 
 services:
+  auth:
+    build:
+      context: .
+    container_name: auth-next
+    ports:
+      - "3999:3000"
+    volumes:
+      - .:/app
+      - /app/node_modules
+    depends_on:
+      - postgres
+    networks:
+      - auth
+
   postgres:
     image: postgres:13
     container_name: postgres
@@ -12,6 +26,8 @@ services:
       - postgres_data:/var/lib/postgresql/data
     ports:
       - "5433:5432"
+    networks:
+      - auth
 
   pgadmin:
     image: dpage/pgadmin4
@@ -25,6 +41,12 @@ services:
       - pgadmin_data:/var/lib/pgadmin
     depends_on:
       - postgres
+    networks:
+      - auth
+
+networks:
+  auth:
+    driver: bridge
 
 volumes:
   postgres_data:
