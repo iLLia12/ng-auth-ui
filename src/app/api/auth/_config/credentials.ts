@@ -10,6 +10,7 @@ export default {
     password: { label: "Password", type: "password" },
   },
   async authorize(credentials: any, req: any) {
+    console.log("credentials!!!! ", credentials);
     // You need to provide your own logic here that takes the credentials
     // submitted and returns either a object representing a user or value
     // that is false/null if the credentials are invalid.
