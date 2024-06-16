@@ -20,6 +20,12 @@ export default async function Home() {
 
   return (
     <main className="flex min-h-screen flex-col items-center justify-between p-24">
+      <section>
+        <Link href="/auth/register">Register</Link>
+        <form action={handleLogout}>
+          <button>Logout</button>
+        </form>
+      </section>
       <Link className="mr-2" href="http://localhost:3999/api/auth/signin">
         Next Auth
       </Link>

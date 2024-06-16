@@ -38,9 +38,6 @@ export async function getSession() {
 
 export async function updateSession(request: NextRequest) {
   const session = request.cookies.get("session")?.value;
-  const session1 = request.cookies.get("next-auth.session-token")?.value;
-  console.log("session: ", session);
-  console.log("session1: ", session1);
   if (!session) return;
   const parsed = await decrypt(session);
   parsed.expired = new Date(Date.now() + 10 + 1000);
