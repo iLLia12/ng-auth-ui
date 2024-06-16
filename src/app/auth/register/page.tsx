@@ -12,21 +12,13 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import {
-  SelectValue,
-  SelectTrigger,
-  SelectContent,
-  SelectItem,
-  Select,
-} from "@/components/ui/select";
 
 const formSchema = z
   .object({
     emailAddress: z.string().email(),
+    username: z.string().min(3).max(20),
     password: z.string().min(3),
     passwordConfirm: z.string(),
-    accountType: z.enum(["personal", "company"]),
-    companyName: z.string().optional(),
   })
   .refine(
     (data) => {
@@ -36,18 +28,6 @@ const formSchema = z
       message: "Passwords do not match",
       path: ["passwordConfirm"],
     }
-  )
-  .refine(
-    (data) => {
-      if (data.accountType === "company") {
-        return !!data.companyName;
-      }
-      return true;
-    },
-    {
-      message: "Company name is required",
-      path: ["companyName"],
-    }
   );
 
 export default function Home() {
@@ -55,13 +35,11 @@ export default function Home() {
     resolver: zodResolver(formSchema),
     defaultValues: {
       emailAddress: "",
+      username: "",
       password: "",
       passwordConfirm: "",
-      companyName: "",
     },
   });
-
-  const accountType = form.watch("accountType");
 
   const handleSubmit = (values: z.infer<typeof formSchema>) => {
     console.log({ values });
@@ -80,7 +58,6 @@ export default function Home() {
             render={({ field }) => {
               return (
                 <FormItem>
-                  <FormLabel>Email address</FormLabel>
                   <FormControl>
                     <Input
                       placeholder="Email address"
@@ -95,53 +72,26 @@ export default function Home() {
           />
           <FormField
             control={form.control}
-            name="accountType"
+            name="username"
             render={({ field }) => {
               return (
                 <FormItem>
-                  <FormLabel>Account type</FormLabel>
-                  <Select onValueChange={field.onChange}>
-                    <FormControl>
-                      <SelectTrigger>
-                        <SelectValue placeholder="Select an account type" />
-                      </SelectTrigger>
-                    </FormControl>
-                    <SelectContent>
-                      <SelectItem value="personal">Personal</SelectItem>
-                      <SelectItem value="company">Company</SelectItem>
-                    </SelectContent>
-                  </Select>
+                  <FormControl>
+                    <Input placeholder="Username" {...field} />
+                  </FormControl>
                   <FormMessage />
                 </FormItem>
               );
             }}
           />
-          {accountType === "company" && (
-            <FormField
-              control={form.control}
-              name="companyName"
-              render={({ field }) => {
-                return (
-                  <FormItem>
-                    <FormLabel>Company name</FormLabel>
-                    <FormControl>
-                      <Input placeholder="Company name" {...field} />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                );
-              }}
-            />
-          )}
           <FormField
             control={form.control}
             name="password"
             render={({ field }) => {
               return (
                 <FormItem>
-                  <FormLabel>Password</FormLabel>
                   <FormControl>
-                    <Input placeholder="Password" type="password" {...field} />
+                    <Input placeholder="Password" {...field} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -154,13 +104,8 @@ export default function Home() {
             render={({ field }) => {
               return (
                 <FormItem>
-                  <FormLabel>Password confirm</FormLabel>
                   <FormControl>
-                    <Input
-                      placeholder="Password confirm"
-                      type="password"
-                      {...field}
-                    />
+                    <Input placeholder="Password confirmation" {...field} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
