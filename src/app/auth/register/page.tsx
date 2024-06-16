@@ -1,4 +1,4 @@
-"use client";
+import { useRef } from "react";
 import * as z from "zod";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -7,7 +7,6 @@ import {
   FormControl,
   FormField,
   FormItem,
-  FormLabel,
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
@@ -31,6 +30,7 @@ const formSchema = z
   );
 
 export default function Home() {
+  //const formRef = useRef(null);
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -41,14 +41,35 @@ export default function Home() {
     },
   });
 
-  const handleSubmit = (values: z.infer<typeof formSchema>) => {
-    console.log({ values });
-  };
+  async function handleSubmit(values: z.infer<typeof formSchema>) {
+    //"use server";
+    // console.log("handleSubmit: ", { values });
+    // console.log(formRef.current);
+    // if (!formRef.current) return;
+    // const formData = new FormData(formRef.current);
+    // //form.reset();
+    // try {
+    //   // Use the fetch API to send the form data
+    //   const response = await fetch("https://example.com/submit", {
+    //     method: "POST",
+    //     body: formData,
+    //   });
+    //   if (response.ok) {
+    //     const result = await response.json();
+    //     console.log("Success:", result);
+    //   } else {
+    //     console.error("Error:", response.statusText);
+    //   }
+    // } catch (error) {
+    //   console.error("Error:", error);
+    // }
+  }
 
   return (
     <main className="flex min-h-screen flex-col items-center justify-between p-24">
       <Form {...form}>
         <form
+          //ref={formRef}
           onSubmit={form.handleSubmit(handleSubmit)}
           className="max-w-md w-full flex flex-col gap-4"
         >
