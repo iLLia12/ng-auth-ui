@@ -11,6 +11,8 @@ import { Button } from "@/components/ui/button";
 import * as z from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
+import { toast } from "sonner";
+import { ApiResponse } from "@/lib/utils";
 
 export const formSchema = z
   .object({
@@ -30,7 +32,7 @@ export const formSchema = z
   );
 
 type Props = {
-  action: (data: z.infer<typeof formSchema>) => any;
+  action: (data: z.infer<typeof formSchema>) => Promise<ApiResponse>;
 };
 
 export default function RegisterForm({ action }: Props) {
@@ -44,11 +46,17 @@ export default function RegisterForm({ action }: Props) {
     },
   });
 
-  function onSubmit(values: z.infer<typeof formSchema>) {
+  async function onSubmit(values: z.infer<typeof formSchema>) {
     // Do something with the form values.
     // ✅ This will be type-safe and validated.
     //console.log(values);
-    action(values);
+    const res = await action(values);
+    console.log("res: ", res);
+    if (res.isError) {
+      toast(res.errors[0]);
+    } else {
+      toast("Registered!!");
+    }
   }
 
   return (
