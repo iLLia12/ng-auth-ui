@@ -1,6 +1,7 @@
 "use server";
 import prisma from "../../../db";
 import { ApiResponse, ErrorApiResponse } from "../../../lib/utils";
+import { redirect } from "next/navigation";
 
 type RegistrationPayloadType = {
   username: string;
@@ -12,7 +13,7 @@ export async function handleRegister({
   email,
   username,
   password,
-}: RegistrationPayloadType): Promise<ApiResponse> {
+}: RegistrationPayloadType): Promise<ApiResponse | void | {}> {
   try {
     const user = await prisma.user.create({
       data: {
@@ -23,11 +24,11 @@ export async function handleRegister({
         isEmailConfirmed: false,
       },
     });
-    return { ...new ApiResponse({ user }) };
   } catch (e) {
-    // The .code property can be accessed in a type-safe manner
     //@ts-ignore
     if (e.code === "P2002") {
+      // The .code property can be accessed in a type-safe manner
+      //@ts-ignore
       return {
         ...new ErrorApiResponse([
           //@ts-ignore
@@ -35,7 +36,7 @@ export async function handleRegister({
         ]),
       };
     }
-    //@ts-ignore
-    return { ...new ErrorApiResponse([`Error code: ${e.code}`]) };
+    throw e;
   }
+  redirect("/api/auth/signin");
 }
