@@ -6,7 +6,7 @@ import credentialsConfig from "../_config/credentials";
 import callbacks from "../_config/callbacks";
 
 const authOptions = {
-  secret: process.env.NEXTAUTH_SECRET,
+  secret: process.env.NEXTAUTH_SECRET!,
   providers: [
     GithubProvider(githubConfig),
     CredentialsProvider(credentialsConfig),

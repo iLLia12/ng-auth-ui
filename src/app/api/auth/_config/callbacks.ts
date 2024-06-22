@@ -4,7 +4,7 @@ const config = {
       url,
       baseUrl,
     });
-    return process.env.REDIRECT_URL;
+    return process.env.REDIRECT_URL || "";
   },
   async signIn({ user, account, profile, email, credentials }: any) {
     console.log("AUTH: signIn callback: ", {
