@@ -14,6 +14,7 @@ import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import { ApiResponse } from "@/lib/utils";
 import Link from "next/link";
+import { signIn } from "next-auth/react";
 
 export const formSchema = z.object({
   emailOrUsername: z.string(),
@@ -34,13 +35,14 @@ export default function SignInForm({ action }: Props) {
   });
 
   async function onSubmit(values: z.infer<typeof formSchema>) {
-    // Do something with the form values.
-    // ✅ This will be type-safe and validated.
-    //console.log(values);
     const res = await action(values);
     if (res && res.isError) {
       toast(res.errors[0]);
     }
+  }
+
+  async function handleSignInWithGithub() {
+    signIn("github");
   }
 
   return (
@@ -80,7 +82,14 @@ export default function SignInForm({ action }: Props) {
         <Button type="submit" className="w-full">
           Sign In
         </Button>
-        <Link href={"/auth/signin"}>
+        <Button
+          type="button"
+          onClick={handleSignInWithGithub}
+          className="w-full"
+        >
+          Sign With Github
+        </Button>
+        <Link href={"/auth/register"}>
           <Button type="button" className="w-full">
             Or Register
           </Button>

@@ -1,7 +1,10 @@
 const config = {
   async redirect({ url, baseUrl }: any) {
-    console.log("AUTH: redirect callback: ", { url, baseUrl });
-    return "http://localhost:3002";
+    console.log(`AUTH:  src/app/api/auth/_config/callbacks.ts: `, {
+      url,
+      baseUrl,
+    });
+    return process.env.REDIRECT_URL;
   },
   async signIn({ user, account, profile, email, credentials }: any) {
     console.log("AUTH: signIn callback: ", {

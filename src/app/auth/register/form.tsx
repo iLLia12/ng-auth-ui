@@ -49,16 +49,9 @@ export default function RegisterForm({ action }: Props) {
     },
   });
 
-  async function handleSignInBtnClick() {
-    await router.push("/auth/signin");
-  }
-
   async function onSubmit(values: z.infer<typeof formSchema>) {
-    // Do something with the form values.
-    // ✅ This will be type-safe and validated.
-    //console.log(values);
     const res = await action(values);
-    if (res && res.isError) {
+    if (res instanceof ApiResponse && res.isError) {
       toast(res.errors[0]);
     }
   }
